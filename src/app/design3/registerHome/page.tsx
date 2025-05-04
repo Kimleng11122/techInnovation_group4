@@ -76,7 +76,7 @@ const Design3 = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-100">
+            <div className="min-h-screen flex items-center justify-center text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
                 <div className="text-center">
                     <div className="mb-4 animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-500 border-solid mx-auto" />
                     <p className="text-xl font-semibold">Scanning in progress...</p>

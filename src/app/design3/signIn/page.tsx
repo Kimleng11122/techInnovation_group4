@@ -4,7 +4,7 @@ import React from "react";
 
 export default function SignIn() {
     return (
-        <div className="min-h-screen bg-gray-900 text-gray-100 flex">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 text-gray-100 flex">
             {/* Left panel / Logo area */}
             <div className="hidden md:flex md:flex-col w-1/3 bg-gray-800 border-r border-gray-700 justify-center items-center">
                 <div className="text-3xl font-bold">LOGO</div>

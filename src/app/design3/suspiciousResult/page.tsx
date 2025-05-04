@@ -3,7 +3,7 @@ import React from "react";
 
 const SuspiciousResultPage = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 text-gray-100 p-6">
       <div className="max-w-6xl mx-auto bg-gray-800 shadow-md rounded-lg p-6">
         
         {/* --- START: Summary Card --- */}

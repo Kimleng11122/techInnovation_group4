@@ -132,20 +132,14 @@ type User = typeof dummyUsers[0];
 
 export default function UserManagementPage() {
     const [search, setSearch] = useState("");
-    const [sortField, setSortField] = useState<keyof User>("username");
-    const [sortAsc, setSortAsc] = useState(true);
     const [selected, setSelected] = useState<User | null>(null);
 
     // Filtered & sorted users
     const users = useMemo(() => {
         return [...dummyUsers]
             .filter(u => u.username.includes(search) || u.fullName.toLowerCase().includes(search.toLowerCase()))
-            .sort((a, b) => {
-                if ((a[sortField] ?? "") < (b[sortField] ?? "")) return sortAsc ? -1 : 1;
-                if ((a[sortField] ?? "") > (b[sortField] ?? "")) return sortAsc ? 1 : -1;
-                return 0;
-            });
-    }, [search, sortField, sortAsc]);
+            
+    }, [search]);
 
     return (
         <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">

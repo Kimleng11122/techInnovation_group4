@@ -2,6 +2,9 @@
 import Link from "next/link";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { v4 as uuid } from "uuid";
+import { motion } from 'framer-motion';
+import { Database, UploadCloud, Clock } from 'lucide-react';
+import { Home, Layers as DatasetIcon, BarChart2 as ModelIcon, Users as UserMgmtIcon } from 'lucide-react';
 
 // --- types ---
 type Version = {
@@ -160,44 +163,82 @@ export default function DatasetManagementPage() {
 
   // --- render ---
   return (
-    <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="relative flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden"
+    >
+      {/* Animated Background Blobs */}
+      <div className="absolute -top-32 -left-32 h-80 w-80 bg-purple-600 opacity-20 blur-3xl animate-blob"></div>
+      <div className="absolute bottom-0 -right-32 h-72 w-72 bg-green-600 opacity-20 blur-3xl animate-blob animation-delay-2000"></div>
+
       {/* Sidebar (reuse your existing AdminPanel sidebar) */}
-      <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-        <Link href="/design3">
-          <div className="text-lg font-semibold mb-4">Admin Panel</div>
-        </Link>
+      <motion.aside
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-64 bg-gray-800 border-r border-gray-700 p-4 relative"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <Home className="h-6 w-6 text-indigo-400" />
+          <Link href="/design3">
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              className="text-lg font-semibold text-gray-100 hover:text-indigo-300"
+            >
+              Admin Panel
+            </motion.span>
+          </Link>
+        </div>
         <nav className="space-y-1">
-          <a href="/design3/admin" className="block px-3 py-2 hover:bg-gray-700 rounded">
-            Activity Monitoring
-          </a>
-          <a
-            href="/design3/admin/dataset-management"
-            className="block px-3 py-2 bg-gray-700 rounded text-gray-100 font-medium"
-          >
-            Dataset Management
-          </a>
-          <a href="/design3/admin/ai-model-tuning"
-            className="block px-3 py-2 hover:bg-gray-700 rounded">
-            AI Model Tuning
-          </a>
-          {/* <a href="/design3/admin/report-options"
-            className="block px-3 py-2 hover:bg-gray-700 rounded">
-            Report Options
-          </a> */}
-          <a href="/design3/admin/user-management"
-            className="block px-3 py-2 hover:bg-gray-700 rounded"
-          >
-            User Management
-          </a>
+          {[
+            { href: '/design3/admin', label: 'Activity Monitoring', icon: <Clock className="h-5 w-5" /> },
+            { href: '/design3/admin/dataset-management', label: 'Dataset Management', icon: <DatasetIcon className="h-5 w-5" />, active: true },
+            { href: '/design3/admin/ai-model-tuning', label: 'AI Model Tuning', icon: <ModelIcon className="h-5 w-5" /> },
+            { href: '/design3/admin/user-management', label: 'User Management', icon: <UserMgmtIcon className="h-5 w-5" /> },
+          ].map((item) => (
+            <motion.a
+              key={item.href}
+              href={item.href}
+              whileHover={{ backgroundColor: '#374151' }}
+              className={`relative flex items-center space-x-2 px-3 py-2 rounded transition-colors duration-200 ${item.active ? 'bg-gray-700 text-indigo-300' : 'text-gray-100 hover:text-indigo-300'
+                }`}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+              {item.active && (
+                <motion.span
+                  layoutId="sidebarIndicator"
+                  className="absolute left-0 inset-y-0 w-1 bg-indigo-500 rounded-tr-md rounded-br-md"
+                />
+              )}
+            </motion.a>
+          ))}
         </nav>
-      </aside>
+      </motion.aside>
 
       {/* Main */}
       <main className="flex-1 p-6 space-y-8">
-        <h1 className="text-2xl font-bold">Dataset Management</h1>
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="flex items-center text-3xl font-bold mb-4"
+        >
+          <Database className="h-8 w-8 text-indigo-400 mr-2" />
+          Dataset Management
+        </motion.h1>
 
         {/* Upload Panel */}
-        <section className="bg-gray-800 p-4 rounded shadow">
+        <motion.section
+          whileHover={{ scale: 1.02 }}
+          transition={{ type: 'spring', stiffness: 300 }}
+          className="bg-gray-800 p-4 rounded shadow relative"
+        >
+          <div className="absolute top-4 right-4 opacity-30">
+            <UploadCloud className="h-6 w-6 text-gray-500 animate-pulse" />
+          </div>
           <h2 className="text-lg font-semibold mb-3">Upload Dataset (CSV / JSON)</h2>
           <form onSubmit={onUploadSubmit} className="flex flex-wrap gap-3">
             <input
@@ -229,7 +270,7 @@ export default function DatasetManagementPage() {
               Upload
             </button>
           </form>
-        </section>
+        </motion.section>
 
         {/* Dataset List + Version Tracking */}
         <section className="space-y-4">
@@ -237,22 +278,28 @@ export default function DatasetManagementPage() {
             <p className="text-gray-400">No datasets uploaded yet.</p>
           ) : (
             datasets.map(ds => (
-              <div key={ds.id} className="bg-gray-800 p-4 rounded shadow">
+              <motion.div
+                key={ds.id}
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                className="bg-gray-800 p-4 rounded shadow relative"
+              >
+                <div className="absolute top-2 right-2 text-sm text-gray-500">v{ds.versions.length}</div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="space-x-3">
                     <span className="font-semibold">{ds.name}</span>
                     <span className="px-2 py-1 text-xs bg-gray-700 rounded">{ds.label}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <label className="flex items-center space-x-1">
-                      <input
-                        type="checkbox"
-                        checked={ds.enabled}
-                        onChange={() => toggleDataset(ds.id)}
-                        className="h-4 w-4 text-green-500 bg-gray-600 rounded focus:ring-0"
+                    <button
+                      onClick={() => toggleDataset(ds.id)}
+                      className={`relative inline-flex items-center h-6 rounded-full w-10 transition-colors focus:outline-none ${ds.enabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                      title={ds.enabled ? 'Disable dataset' : 'Enable dataset'}
+                    >
+                      <span
+                        className={`transform transition-transform inline-block w-4 h-4 bg-white rounded-full ${ds.enabled ? 'translate-x-4' : 'translate-x-1'}`}
                       />
-                      <span className="text-sm">{ds.enabled ? "Enabled" : "Disabled"}</span>
-                    </label>
+                    </button>
                     <input
                       type="file"
                       accept=".csv,.json"
@@ -276,7 +323,12 @@ export default function DatasetManagementPage() {
                     </thead>
                     <tbody className="divide-y divide-gray-700">
                       {ds.versions.map((v, i) => (
-                        <tr key={v.id} className="hover:bg-gray-700">
+                        <motion.tr
+                          key={v.id}
+                          whileHover={{ backgroundColor: '#374151' }}
+                          transition={{ duration: 0.2 }}
+                          className="cursor-pointer even:bg-gray-800"
+                        >
                           <td className="px-3 py-2">{v.id.slice(0, 8)}</td>
                           <td className="px-3 py-2">
                             {editRowIndex === i && previewDataset?.id === ds.id ? (
@@ -296,6 +348,7 @@ export default function DatasetManagementPage() {
                               <button
                                 onClick={() => onSaveEdit(ds)}
                                 className="text-green-400 hover:text-green-300"
+                                title="Save row"
                               >
                                 Save
                               </button>
@@ -303,6 +356,7 @@ export default function DatasetManagementPage() {
                               <button
                                 onClick={() => onStartEdit(ds, i)}
                                 className="text-blue-400 hover:text-blue-300"
+                                title="Edit row"
                               >
                                 Edit
                               </button>
@@ -310,20 +364,21 @@ export default function DatasetManagementPage() {
                             <button
                               onClick={() => onDeleteRow(ds, i)}
                               className="text-red-400 hover:text-red-300"
+                              title="Delete row"
                             >
                               Delete
                             </button>
                           </td>
-                        </tr>
+                        </motion.tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </motion.div>
             ))
           )}
         </section>
       </main>
-    </div>
+    </motion.div>
   );
 }

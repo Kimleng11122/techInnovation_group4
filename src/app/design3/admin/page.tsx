@@ -4,6 +4,17 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import {
+  User as UserIcon,
+  Search,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  XOctagon,
+  Sun,
+} from 'lucide-react';
+import { Home, Layers as DatasetIcon, BarChart2 as ModelIcon, Users as UserMgmtIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
     ResponsiveContainer,
     LineChart,
     Line,
@@ -19,7 +30,7 @@ import {
 type StatCard = {
     label: string;
     value: number | string;
-    icon: string;
+    icon: React.ReactNode;
 };
 
 type Activity = {
@@ -59,12 +70,12 @@ const perfTrendData = [
 export default function UserActivityMonitoringPage() {
     // ─── Dummy State ───────────────────────────────────────────────────────
     const stats: StatCard[] = [
-        { label: "Registered Users", value: 1248, icon: "👤" },
-        { label: "Total Scans", value: 4872, icon: "🔍" },
-        { label: "Safe Rate", value: "76%", icon: "✅" },
-        { label: "Suspicious Rate", value: "15%", icon: "⚠️" },
-        { label: "Malicious Rate", value: "9%", icon: "🛑" },
-        { label: "Recent Threats", value: 37, icon: "🚨" },
+        { label: "Registered Users", value: 1248, icon: <UserIcon className="h-8 w-8 text-indigo-400" /> },
+        { label: "Total Scans", value: 4872, icon: <Search className="h-8 w-8 text-blue-400" /> },
+        { label: "Safe Rate", value: "76%", icon: <CheckCircle className="h-8 w-8 text-green-400" /> },
+        { label: "Suspicious Rate", value: "15%", icon: <AlertTriangle className="h-8 w-8 text-yellow-400" /> },
+        { label: "Malicious Rate", value: "9%", icon: <XOctagon className="h-8 w-8 text-red-400" /> },
+        { label: "Recent Threats", value: 37, icon: <Clock className="h-8 w-8 text-pink-400" /> },
     ];
 
     const [activities] = useState<Activity[]>([
@@ -87,63 +98,90 @@ export default function UserActivityMonitoringPage() {
 
     // ─── Render ────────────────────────────────────────────────────────────
     return (
-        <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="relative flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden"
+        >
+          {/* Decorative Blobs */}
+          <div className="absolute -top-20 -left-20 h-72 w-72 bg-purple-600 opacity-20 blur-3xl animate-blob"></div>
+          <div className="absolute bottom-0 -right-20 h-64 w-64 bg-green-600 opacity-20 blur-3xl animate-blob animation-delay-2000"></div>
+
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
+            <motion.aside
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="w-64 bg-gray-800 border-r border-gray-700 p-4 relative"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <Home className="h-6 w-6 text-indigo-400" />
                 <Link href="/design3">
-                    <div className="text-lg font-semibold mb-4">Admin Panel</div>
+                  <motion.span
+                    whileHover={{ scale: 1.05 }}
+                    className="text-lg font-semibold text-gray-100 hover:text-indigo-300"
+                  >
+                    Admin Panel
+                  </motion.span>
                 </Link>
-                <nav className="space-y-1">
-                    <a
-                        href="/design3/admin"
-                        className="block px-3 py-2 bg-gray-700 text-gray-100 rounded font-medium"
-                    >
-                        Activity Monitoring
-                    </a>
-                    <a
-                        href="/design3/admin/dataset-management"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        Dataset Management
-                    </a>
-                    <a
-                        href="/design3/admin/ai-model-tuning"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        AI Model Tuning
-                    </a>
-                    {/* <a
-                        href="/design3/admin/report-options"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        Report Options
-                    </a> */}
-                    <a
-                        href="/design3/admin/user-management"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        User Management
-                    </a>
-                </nav>
-            </aside>
+              </div>
+              <nav className="space-y-1">
+                {[
+                  { href: '/design3/admin', label: 'Activity Monitoring', icon: <Clock className="h-5 w-5" />, active: true },
+                  { href: '/design3/admin/dataset-management', label: 'Dataset Management', icon: <DatasetIcon className="h-5 w-5" /> },
+                  { href: '/design3/admin/ai-model-tuning', label: 'AI Model Tuning', icon: <ModelIcon className="h-5 w-5" /> },
+                  { href: '/design3/admin/user-management', label: 'User Management', icon: <UserMgmtIcon className="h-5 w-5" /> },
+                ].map((item) => (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    whileHover={{ backgroundColor: '#374151' }}
+                    className={`relative flex items-center space-x-2 px-3 py-2 rounded transition-colors duration-200 ${
+                      item.active ? 'bg-gray-700 text-indigo-300' : 'text-gray-100 hover:text-indigo-300'
+                    }`}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                    {item.active && (
+                      <motion.span
+                        layoutId="sidebarIndicator"
+                        className="absolute left-0 inset-y-0 w-1 bg-indigo-500 rounded-tr-md rounded-br-md"
+                      />
+                    )}
+                  </motion.a>
+                ))}
+              </nav>
+            </motion.aside>
 
             {/* Main Content */}
             <main className="flex-1 p-6 space-y-8 overflow-y-auto">
+              {/* Theme Toggle */}
+              <button
+                onClick={() => document.documentElement.classList.toggle('light')}
+                className="absolute top-6 right-6 p-2 rounded-full bg-gray-700/50 hover:bg-gray-700 text-white"
+              >
+                <Sun className="h-5 w-5" />
+                {/* swap to <Moon /> for light mode */}
+              </button>
+
                 <h1 className="text-2xl font-bold">Activity Monitoring</h1>
 
                 {/* System Statistics */}
                 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {stats.map((s) => (
-                        <div
-                            key={s.label}
-                            className="flex items-center space-x-4 bg-gray-800 p-4 rounded shadow"
+                        <motion.div
+                          key={s.label}
+                          whileHover={{ scale: 1.03 }}
+                          transition={{ type: 'spring', stiffness: 300 }}
+                          className="flex items-center space-x-4 bg-gray-800 p-4 rounded shadow"
                         >
                             <div className="text-3xl">{s.icon}</div>
                             <div>
                                 <p className="text-xl font-semibold">{s.value}</p>
                                 <p className="text-sm text-gray-400">{s.label}</p>
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
                 </section>
 
@@ -162,12 +200,17 @@ export default function UserActivityMonitoringPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-700">
                                 {activities.map((a, i) => (
-                                    <tr key={i} className="hover:bg-gray-800">
+                                    <motion.tr
+                                        key={i}
+                                        whileHover={{ backgroundColor: '#2d3748' }}
+                                        transition={{ duration: 0.2 }}
+                                        className="cursor-pointer even:bg-gray-800"
+                                    >
                                         <td className="px-4 py-2">{a.timestamp}</td>
                                         <td className="px-4 py-2">{a.user}</td>
                                         <td className="px-4 py-2">{a.action}</td>
                                         <td className="px-4 py-2">{a.detail || "—"}</td>
-                                    </tr>
+                                    </motion.tr>
                                 ))}
                             </tbody>
                         </table>
@@ -177,7 +220,7 @@ export default function UserActivityMonitoringPage() {
                 {/* Trend Charts & Model Status */}
                 <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Threat Types Over Time */}
-                    <div className="bg-gray-800 p-4 rounded shadow">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="bg-gray-800 p-4 rounded shadow">
                         <h2 className="text-lg font-semibold mb-2">Threat Types Over Time</h2>
                         <ResponsiveContainer width="100%" height={160}>
                             <LineChart data={threatTrendData}>
@@ -191,10 +234,10 @@ export default function UserActivityMonitoringPage() {
                                 <Line type="monotone" dataKey="Malicious" stroke="#F44336" strokeWidth={2} />
                             </LineChart>
                         </ResponsiveContainer>
-                    </div>
+                    </motion.div>
 
                     {/* Upload & Performance Trends */}
-                    <div className="bg-gray-800 p-4 rounded shadow">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="bg-gray-800 p-4 rounded shadow">
                         <h2 className="text-lg font-semibold mb-2">Upload & Model Performance</h2>
                         <ResponsiveContainer width="100%" height={160}>
                             <BarChart data={perfTrendData}>
@@ -208,7 +251,7 @@ export default function UserActivityMonitoringPage() {
                                 <Line yAxisId="right" type="monotone" dataKey="accuracy" stroke="#FFC107" strokeWidth={2} />
                             </BarChart>
                         </ResponsiveContainer>
-                    </div>
+                    </motion.div>
 
 
 
@@ -245,6 +288,6 @@ export default function UserActivityMonitoringPage() {
                     </ul>
                 </section>
             </main>
-        </div>
+        </motion.div>
     );
 }

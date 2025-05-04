@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from 'framer-motion';
+import { Zap, ShieldCheck } from 'lucide-react';
 
 interface ScanRecord {
     name: string;
@@ -10,7 +12,7 @@ interface ScanRecord {
     threatSummary: string;
 }
 
-const Design3 = () => {
+const RegisterHome = () => {
     const [file, setFile] = useState<File | null>(null);
     const [url, setUrl] = useState("");
     const [loading, setLoading] = useState(false);
@@ -86,22 +88,31 @@ const Design3 = () => {
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-900 text-gray-100">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative flex min-h-screen bg-gray-900 text-gray-100 overflow-hidden"
+        >
+            {/* Animated background blobs */}
+            <div className="absolute -top-20 -left-20 h-72 w-72 bg-purple-600 opacity-20 blur-3xl animate-blob"></div>
+            <div className="absolute bottom-0 -right-20 h-64 w-64 bg-green-600 opacity-20 blur-3xl animate-blob animation-delay-2000"></div>
             {/* Right Section (Main Content) */}
             <div className="flex-1 flex flex-col">
                 {/* Top Navbar */}
                 <header className="flex items-center justify-between bg-gray-800 border-b border-gray-700 px-4 py-3">
-
-                    <Link href="/design3">
-                        <div className="text-lg font-bold">Welcome Kimleng</div>
-                    </Link>
-                    <div className="space-x-3">
-                        <Link href="/design3/signIn">
-                            <button className="text-white bg-indigo-600 px-3 py-1 rounded hover:bg-indigo-700">
-                                Log out
-                            </button>
+                    <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="w-full flex items-center justify-between">
+                        <Link href="/design3">
+                            <div className="text-lg font-bold">Welcome Kimleng</div>
                         </Link>
-                    </div>
+                        <div className="space-x-3">
+                            <Link href="/design3">
+                                <button className="text-white bg-indigo-600 px-3 py-1 rounded hover:bg-indigo-700">
+                                    Log out
+                                </button>
+                            </Link>
+                        </div>
+                    </motion.div>
                 </header>
 
                 {/* Main Content */}
@@ -112,8 +123,14 @@ const Design3 = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 max-w-4xl">
                         {/* URL Risk Analyzer */}
-                        <div className="bg-gray-800 p-6 rounded-lg shadow">
-                            <h2 className="text-xl font-semibold mb-4">URL Risk Analyzer</h2>
+                        <motion.div
+                            whileHover={{ scale: 1.03 }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                            className="bg-gray-800 p-6 rounded-lg shadow"
+                        >
+                            <h2 className="text-xl font-semibold mb-4">
+                                <Zap className="inline h-5 w-5 text-indigo-400 mr-2"/> URL Risk Analyzer
+                            </h2>
                             <div className="flex space-x-2 mb-4">
                                 <input
                                     type="text"
@@ -132,11 +149,17 @@ const Design3 = () => {
                             <p className="text-sm text-gray-400">
                                 Paste any URL (e.g. http://example.com) to analyze for potential threats.
                             </p>
-                        </div>
+                        </motion.div>
 
                         {/* File Safety Checker */}
-                        <div className="bg-gray-800 p-6 rounded-lg shadow">
-                            <h2 className="text-xl font-semibold mb-4">File Safety Checker</h2>
+                        <motion.div
+                            whileHover={{ scale: 1.03 }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                            className="bg-gray-800 p-6 rounded-lg shadow"
+                        >
+                            <h2 className="text-xl font-semibold mb-4">
+                                <ShieldCheck className="inline h-5 w-5 text-green-400 mr-2"/> File Safety Checker
+                            </h2>
                             <label
                                 htmlFor="fileUpload"
                                 className="block w-full p-6 border-2 border-dashed border-gray-600 rounded text-center cursor-pointer mb-4 hover:border-indigo-500"
@@ -159,7 +182,7 @@ const Design3 = () => {
                             >
                                 Scan
                             </button>
-                        </div>
+                        </motion.div>
                     </div>
 
 
@@ -168,7 +191,7 @@ const Design3 = () => {
                         <div className="mb-4">
                             <div className="flex border-b border-gray-700">
                                 <button
-                                    className={`px-4 py-2 text-sm font-semibold ${viewMode === "file"
+                                    className={`px-4 py-2 text-sm font-semibold transition-colors duration-200 hover:text-indigo-300 focus:outline-none ${viewMode === "file"
                                         ? "text-indigo-400 border-b-2 border-indigo-400"
                                         : "text-gray-400"
                                         }`}
@@ -177,7 +200,7 @@ const Design3 = () => {
                                     Files
                                 </button>
                                 <button
-                                    className={`px-4 py-2 text-sm font-semibold ${viewMode === "url"
+                                    className={`px-4 py-2 text-sm font-semibold transition-colors duration-200 hover:text-indigo-300 focus:outline-none ${viewMode === "url"
                                         ? "text-indigo-400 border-b-2 border-indigo-400"
                                         : "text-gray-400"
                                         }`}
@@ -202,9 +225,11 @@ const Design3 = () => {
                                         {scanHistory
                                             .filter((record) => !record.name.startsWith("http"))
                                             .map((record, index) => (
-                                                <tr
+                                                <motion.tr
+                                                    whileHover={{ backgroundColor: '#2d3748' }}
+                                                    transition={{ duration: 0.2 }}
                                                     key={index}
-                                                    className="bg-gray-800 even:bg-gray-700 hover:bg-gray-600 transition-colors cursor-pointer"
+                                                    className="even:bg-gray-800 hover:bg-gray-700 cursor-pointer"
                                                     onClick={() =>
                                                         record.status === "Malicious"
                                                             ? router.push("/design3/maliciousResult") :
@@ -219,11 +244,9 @@ const Design3 = () => {
                                                     <td className="px-4 py-2 border border-gray-700 text-gray-300">
                                                         {record.date}
                                                     </td>
-
                                                     <td className="px-4 py-2 border border-gray-700 text-gray-300">
                                                         {record.threatSummary}
                                                     </td>
-
                                                     <td className="px-4 py-2 border border-gray-700 text-gray-300">
                                                         {record.status === "Safe" && (
                                                             <span className="bg-green-900 text-green-400 text-xs font-semibold px-2 py-1 rounded">
@@ -241,7 +264,7 @@ const Design3 = () => {
                                                             </span>
                                                         )}
                                                     </td>
-                                                </tr>
+                                                </motion.tr>
                                             ))}
                                     </tbody>
                                 </table>
@@ -259,9 +282,11 @@ const Design3 = () => {
                                         {scanHistory
                                             .filter((record) => record.name.startsWith("http"))
                                             .map((record, index) => (
-                                                <tr
+                                                <motion.tr
+                                                    whileHover={{ backgroundColor: '#2d3748' }}
+                                                    transition={{ duration: 0.2 }}
                                                     key={index}
-                                                    className="bg-gray-800 even:bg-gray-700 hover:bg-gray-600 transition-colors cursor-pointer"
+                                                    className="even:bg-gray-800 hover:bg-gray-700 cursor-pointer"
                                                     onClick={() =>
                                                         record.status === "Malicious"
                                                             ? router.push("/design3/maliciousResult") :
@@ -279,7 +304,6 @@ const Design3 = () => {
                                                     <td className="px-4 py-2 border border-gray-700 text-gray-300">
                                                         {record.threatSummary}
                                                     </td>
-
                                                     <td className="px-4 py-2 border border-gray-700 text-gray-300">
                                                         {record.status === "Safe" && (
                                                             <span className="bg-green-900 text-green-400 text-xs font-semibold px-2 py-1 rounded">
@@ -297,7 +321,7 @@ const Design3 = () => {
                                                             </span>
                                                         )}
                                                     </td>
-                                                </tr>
+                                                </motion.tr>
                                             ))}
                                     </tbody>
                                 </table>
@@ -309,8 +333,8 @@ const Design3 = () => {
 
                 </main>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
-export default Design3;
+export default RegisterHome;

@@ -12,6 +12,9 @@ import {
     Legend,
 } from "recharts";
 import { v4 as uuid } from "uuid";
+import { motion } from 'framer-motion';
+import { Zap, UploadCloud, Clock } from 'lucide-react';
+import { Home, Layers as DatasetIcon, BarChart2 as ModelIcon, Users as UserMgmtIcon } from 'lucide-react';
 
 type ModelVersion = {
     id: string;
@@ -84,44 +87,71 @@ export default function ModelTuningPage() {
 
     // ─── Render ────────────────────────────────────────────────────────────────
     return (
-        <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative flex min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 overflow-hidden"
+        >
+            {/* Background blobs */}
+            <div className="absolute -top-24 -left-24 h-80 w-80 bg-purple-600 opacity-20 blur-3xl animate-blob"></div>
+            <div className="absolute bottom-0 -right-24 h-72 w-72 bg-green-600 opacity-20 blur-3xl animate-blob animation-delay-2000"></div>
+
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-                <Link href="/design3">
-                    <div className="text-lg font-semibold mb-4">Admin Panel</div>
-                </Link>
+            <motion.aside
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="w-64 bg-gray-800 border-r border-gray-700 p-4 relative"
+            >
+                <div className="flex items-center justify-between mb-6">
+                    <Home className="h-6 w-6 text-indigo-400" />
+                    <Link href="/design3">
+                        <motion.span
+                            whileHover={{ scale: 1.05 }}
+                            className="text-lg font-semibold text-gray-100 hover:text-indigo-300"
+                        >
+                            Admin Panel
+                        </motion.span>
+                    </Link>
+                </div>
                 <nav className="space-y-1">
-                    <a href="/design3/admin" className="block px-3 py-2 hover:bg-gray-700 rounded">
-                        Activity Monitoring
-                    </a>
-                    <a
-                        href="/design3/admin/dataset-management"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        Dataset Management
-                    </a>
-                    <a href="/design3/admin/ai-model-tuning" className="block px-3 py-2 bg-gray-700 rounded text-gray-100 font-medium">
-                        AI Model Tuning
-                    </a>
-                    {/* <a href="/design3/admin/report-options" className="block px-3 py-2 hover:bg-gray-700 rounded">
-                        Report Options
-                    </a> */}
-                    <a
-                        href="/design3/admin/user-management"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        User Management
-                    </a>
+                    {[
+                        { href: '/design3/admin', label: 'Activity Monitoring', icon: <Clock className="h-5 w-5" /> },
+                        { href: '/design3/admin/dataset-management', label: 'Dataset Management', icon: <DatasetIcon className="h-5 w-5" /> },
+                        { href: '/design3/admin/ai-model-tuning', label: 'AI Model Tuning', icon: <ModelIcon className="h-5 w-5" />, active: true },
+                        { href: '/design3/admin/user-management', label: 'User Management', icon: <UserMgmtIcon className="h-5 w-5" /> },
+                    ].map((item) => (
+                        <motion.a
+                            key={item.href}
+                            href={item.href}
+                            whileHover={{ backgroundColor: '#374151' }}
+                            className={`relative flex items-center space-x-2 px-3 py-2 rounded transition-colors duration-200 ${item.active ? 'bg-gray-700 text-indigo-300' : 'text-gray-100 hover:text-indigo-300'
+                                }`}
+                        >
+                            <span>{item.icon}</span>
+                            <span>{item.label}</span>
+                            {item.active && (
+                                <motion.span
+                                    layoutId="sidebarIndicator"
+                                    className="absolute left-0 inset-y-0 w-1 bg-indigo-500 rounded-tr-md rounded-br-md"
+                                />
+                            )}
+                        </motion.a>
+                    ))}
                 </nav>
-            </aside>
+            </motion.aside>
 
             {/* Main Content */}
             <main className="flex-1 p-6 space-y-8">
                 <h1 className="text-2xl font-bold">AI Model Tuning</h1>
 
                 {/* Parameter Configuration */}
-                <section className="bg-gray-800 p-6 rounded shadow">
-                    <h2 className="text-lg font-semibold mb-4">Parameter Configuration</h2>
+                <motion.section whileHover={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}
+                    className="bg-gray-800 p-6 rounded shadow relative">
+                    <h2 className="text-lg font-semibold mb-4">
+                        <Zap className="inline h-5 w-5 text-blue-400 mr-2" /> Parameter Configuration
+                    </h2>
                     <div className="grid grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="block text-sm">Learning Rate</label>
@@ -166,20 +196,23 @@ export default function ModelTuningPage() {
                         </div>
                     </div>
                     <div className="mt-6 flex space-x-4">
-                        <button className="bg-blue-600 px-5 py-2 rounded hover:bg-blue-500">
+                        <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                            className="bg-blue-600 px-5 py-2 rounded text-white"
+                        >
                             Train Model
-                        </button>
-                        <button
-                            onClick={handleParamReset}
-                            className="border border-gray-600 px-5 py-2 rounded hover:bg-gray-700"
+                        </motion.button>
+                        <motion.button onClick={handleParamReset} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                            className="border border-gray-600 px-5 py-2 rounded text-white"
                         >
                             Reset Settings
-                        </button>
+                        </motion.button>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* Model Upload & Selection */}
-                <section className="bg-gray-800 p-6 rounded shadow space-y-4">
+                <motion.section whileHover={{ scale: 1.02 }} transition={{ type: 'spring', stiffness: 300 }}
+                    className="bg-gray-800 p-6 rounded shadow space-y-4 relative">
+                    <UploadCloud className="absolute top-4 right-4 h-6 w-6 text-green-400 opacity-30 animate-pulse" />
                     <h2 className="text-lg font-semibold">Model Upload / Selection</h2>
                     <form onSubmit={onUploadSubmit} className="flex items-center gap-4">
                         <input
@@ -207,7 +240,7 @@ export default function ModelTuningPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-700">
                                 {versions.map(ver => (
-                                    <tr
+                                    <motion.tr whileHover={{ backgroundColor: '#374151' }} transition={{ duration: 0.2 }}
                                         key={ver.id}
                                         className={
                                             ver.id === activeVersion
@@ -231,17 +264,18 @@ export default function ModelTuningPage() {
                                                 <span className="text-green-400">Active</span>
                                             )}
                                         </td>
-                                    </tr>
+                                    </motion.tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* Training Graphs (placeholders) & Performance Logs */}
                 <section className="grid grid-cols-2 gap-6">
                     {/* Graphs */}
-                    <section className="bg-gray-800 p-6 rounded shadow">
+                    <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+                        className="bg-gray-800 p-6 rounded shadow">
                         <h2 className="text-lg font-semibold mb-4">Training Graphs</h2>
                         <ResponsiveContainer width="100%" height={200}>
                             <LineChart data={trainingData}>
@@ -254,7 +288,7 @@ export default function ModelTuningPage() {
                                 <Line type="monotone" dataKey="loss" name="Loss" stroke="#F44336" strokeWidth={2} />
                             </LineChart>
                         </ResponsiveContainer>
-                    </section>
+                    </motion.section>
                     {/* Performance */}
                     <div className="bg-gray-800 p-4 rounded shadow space-y-4">
                         <h2 className="text-lg font-semibold">Performance Logs</h2>
@@ -286,6 +320,6 @@ export default function ModelTuningPage() {
                     </div>
                 </section>
             </main>
-        </div>
+        </motion.div>
     );
 }

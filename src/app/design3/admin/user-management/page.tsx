@@ -11,7 +11,16 @@ import {
     AlertCircle,
     ShieldCheck,
     Archive,
+    Mail,
+    FileText,
+    CheckCircle,
+    XOctagon,
+    Eye,
+    UserMinus,
+    Trash2,
 } from "lucide-react";
+import { motion } from 'framer-motion';
+import { Clock, Home, Layers as DatasetIcon, BarChart2 as ModelIcon, Users as UserMgmtIcon } from 'lucide-react';
 import Link from "next/link";
 
 // Dummy user data
@@ -141,38 +150,49 @@ export default function UserManagementPage() {
     return (
         <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
             {/* Sidebar omit for brevity... reuse AdminPanel */}
-            <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-                <Link href="/design3">
-                    <div className="text-lg font-semibold mb-4">Admin Panel</div>
-                </Link>
+            <motion.aside
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="w-64 bg-gray-800 border-r border-gray-700 p-4 relative"
+            >
+                <div className="flex items-center justify-between mb-6">
+                    <Home className="h-6 w-6 text-indigo-400" />
+                    <Link href="/design3">
+                        <motion.span
+                            whileHover={{ scale: 1.05 }}
+                            className="text-lg font-semibold text-gray-100 hover:text-indigo-300"
+                        >
+                            Admin Panel
+                        </motion.span>
+                    </Link>
+                </div>
                 <nav className="space-y-1">
-                    <a href="/design3/admin"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded">
-                        Activity Monitoring
-                    </a>
-                    <a
-                        href="/design3/admin/dataset-management"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded"
-                    >
-                        Dataset Management
-                    </a>
-                    <a href="/design3/admin/ai-model-tuning"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded">
-                        AI Model Tuning
-                    </a>
-                    {/* <a href="/design3/admin/report-options"
-                        className="block px-3 py-2 hover:bg-gray-700 rounded">
-                        Report Options
-                    </a> */}
-
-                    <a href="/design3/admin/user-management"
-                        className="block px-3 py-2 bg-gray-700 rounded text-gray-100 font-medium"
-                    >
-                        User Management
-                    </a>
-
+                    {[
+                        { href: '/design3/admin', label: 'Activity Monitoring', icon: <Clock className="h-5 w-5" /> },
+                        { href: '/design3/admin/dataset-management', label: 'Dataset Management', icon: <DatasetIcon className="h-5 w-5" /> },
+                        { href: '/design3/admin/ai-model-tuning', label: 'AI Model Tuning', icon: <ModelIcon className="h-5 w-5" /> },
+                        { href: '/design3/admin/user-management', label: 'User Management', icon: <UserMgmtIcon className="h-5 w-5" />, active: true },
+                    ].map((item) => (
+                        <motion.a
+                            key={item.href}
+                            href={item.href}
+                            whileHover={{ backgroundColor: '#374151' }}
+                            className={`relative flex items-center space-x-2 px-3 py-2 rounded transition-colors duration-200 ${item.active ? 'bg-gray-700 text-indigo-300' : 'text-gray-100 hover:text-indigo-300'
+                                }`}
+                        >
+                            <span>{item.icon}</span>
+                            <span>{item.label}</span>
+                            {item.active && (
+                                <motion.span
+                                    layoutId="sidebarIndicator"
+                                    className="absolute left-0 inset-y-0 w-1 bg-indigo-500 rounded-tr-md rounded-br-md"
+                                />
+                            )}
+                        </motion.a>
+                    ))}
                 </nav>
-            </aside>
+            </motion.aside>
 
             <main className="flex-1 p-6 overflow-y-auto">
                 <h1 className="text-2xl font-bold mb-4">User Management</h1>
@@ -188,54 +208,50 @@ export default function UserManagementPage() {
                     />
                 </div>
 
-                {/* Table */}
-                <div className="overflow-x-auto bg-gray-800 rounded">
-                    <table className="min-w-full text-sm">
-                        <thead className="bg-gray-700">
-                            <tr>
-                                {[
-                                    { key: "username", label: "Username" },
-                                    { key: "email", label: "Email" },
-                                    { key: "role", label: "Role" },
-                                    { key: "uploads", label: "Uploads" },
-                                    { key: "threats", label: "Threats Detected" },
-                                    { key: "status", label: "Status" },
-                                    { key: "actions", label: "Actions" },
-                                ].map(col => (
-                                    <th
-                                        key={col.key}
-                                        className="px-4 py-2 text-left text-gray-300 cursor-pointer hover:bg-gray-600"
-                                        onClick={() => {
-                                            if (col.key !== "actions") {
-                                                const field = col.key as keyof User;
-                                                setSortAsc(sortField === field ? !sortAsc : true);
-                                                setSortField(field);
-                                            }
-                                        }}
-                                    >
-                                        {col.label}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map(u => (
-                                <tr key={u.id} className="border-b border-gray-700 hover:bg-gray-800">
-                                    <td className="px-4 py-2">{u.username} / {u.fullName}</td>
-                                    <td className="px-4 py-2">{u.email}</td>
-                                    <td className="px-4 py-2">{u.role}</td>
-                                    <td className="px-4 py-2">{u.uploads}</td>
-                                    <td className="px-4 py-2">{u.threats}</td>
-                                    <td className={`px-4 py-2 ${u.status === "Active" ? "text-green-400" : u.status === "Suspended" ? "text-yellow-400" : "text-red-400"}`}>{u.status}</td>
-                                    <td className="px-4 py-2 space-x-2">
-                                        <button onClick={() => setSelected(u)} className="text-blue-400 hover:text-blue-300">View</button>
-                                        <button className="text-yellow-400 hover:text-yellow-300">Suspend</button>
-                                        <button className="text-red-400 hover:text-red-300">Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                {/* Card Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {users.map(u => (
+                        <motion.div
+                            key={u.id}
+                            whileHover={{ scale: 1.03 }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                            onClick={() => setSelected(u)}
+                            className="bg-gray-800 p-4 rounded-lg shadow cursor-pointer flex flex-col justify-between"
+                        >
+                            {/* Header */}
+                            <div className="flex items-center mb-4">
+                                <UserIcon className="h-6 w-6 text-indigo-400 mr-2" />
+                                <div>
+                                    <p className="text-lg font-semibold">{u.fullName}</p>
+                                    <p className="text-sm text-gray-400">@{u.username}</p>
+                                </div>
+                            </div>
+                            {/* Details */}
+                            <div className="space-y-2 text-sm">
+                                <p className="flex items-center"><Mail className="h-5 w-5 text-gray-400 mr-2" />{u.email}</p>
+                                <p className="flex items-center"><FileText className="h-5 w-5 text-gray-400 mr-2" />Uploads: {u.uploads}</p>
+                                <p className="flex items-center"><AlertCircle className="h-5 w-5 text-gray-400 mr-2" />Threats: {u.threats}</p>
+                                <p className="flex items-center">
+                                    {u.status === 'Active' && <CheckCircle className="h-5 w-5 text-green-400 mr-2" />}
+                                    {u.status === 'Suspended' && <AlertCircle className="h-5 w-5 text-yellow-400 mr-2" />}
+                                    {u.status === 'Banned' && <XOctagon className="h-5 w-5 text-red-400 mr-2" />}
+                                    <span className={`font-medium ${u.status === 'Active' ? 'text-green-300' : u.status === 'Suspended' ? 'text-yellow-300' : 'text-red-300'}`}>{u.status}</span>
+                                </p>
+                            </div>
+                            {/* Actions */}
+                            <div className="mt-4 flex justify-end space-x-3">
+                                <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-blue-600 rounded hover:bg-blue-500" title="View User">
+                                    <Eye className="h-4 w-4 text-white" />
+                                </motion.button>
+                                <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-yellow-600 rounded hover:bg-yellow-500" title="Suspend User">
+                                    <UserMinus className="h-4 w-4 text-white" />
+                                </motion.button>
+                                <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-red-600 rounded hover:bg-red-500" title="Delete User">
+                                    <Trash2 className="h-4 w-4 text-white" />
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
 
                 {/* Detail Side Panel */}

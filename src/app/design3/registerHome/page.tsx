@@ -91,7 +91,10 @@ const Design3 = () => {
             <div className="flex-1 flex flex-col">
                 {/* Top Navbar */}
                 <header className="flex items-center justify-between bg-gray-800 border-b border-gray-700 px-4 py-3">
-                    <div className="text-lg font-bold">Welcome Kimleng</div>
+
+                    <Link href="/design3">
+                        <div className="text-lg font-bold">Welcome Kimleng</div>
+                    </Link>
                     <div className="space-x-3">
                         <Link href="/design3/signIn">
                             <button className="text-white bg-indigo-600 px-3 py-1 rounded hover:bg-indigo-700">

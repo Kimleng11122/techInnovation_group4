@@ -112,12 +112,12 @@ export default function UserActivityMonitoringPage() {
                     >
                         AI Model Tuning
                     </a>
-                    <a
+                    {/* <a
                         href="/design3/admin/report-options"
                         className="block px-3 py-2 hover:bg-gray-700 rounded"
                     >
                         Report Options
-                    </a>
+                    </a> */}
                     <a
                         href="/design3/admin/user-management"
                         className="block px-3 py-2 hover:bg-gray-700 rounded"

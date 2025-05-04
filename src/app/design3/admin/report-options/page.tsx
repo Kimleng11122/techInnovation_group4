@@ -1,6 +1,7 @@
 // File: src/app/design3/admin/report-options/page.tsx
 "use client";
 
+import Link from "next/link";
 import React, { useState, FormEvent } from "react";
 
 export default function ReportOptionsPage() {
@@ -53,7 +54,9 @@ export default function ReportOptionsPage() {
         <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
             {/* Sidebar */}
             <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-                <div className="text-lg font-semibold mb-4">Admin Panel</div>
+                <Link href="/design3">
+                    <div className="text-lg font-semibold mb-4">Admin Panel</div>
+                </Link>
                 <nav className="space-y-1">
                     <a href="/design3/admin"
                         className="block px-3 py-2 hover:bg-gray-700 rounded">

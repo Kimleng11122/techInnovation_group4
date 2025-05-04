@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import {
     ResponsiveContainer,
@@ -86,7 +87,9 @@ export default function ModelTuningPage() {
         <div className="flex min-h-screen text-gray-100 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
             {/* Sidebar */}
             <aside className="w-64 bg-gray-800 border-r border-gray-700 p-4">
-                <div className="text-lg font-semibold mb-4">Admin Panel</div>
+                <Link href="/design3">
+                    <div className="text-lg font-semibold mb-4">Admin Panel</div>
+                </Link>
                 <nav className="space-y-1">
                     <a href="/design3/admin" className="block px-3 py-2 hover:bg-gray-700 rounded">
                         Activity Monitoring
@@ -100,9 +103,9 @@ export default function ModelTuningPage() {
                     <a href="/design3/admin/ai-model-tuning" className="block px-3 py-2 bg-gray-700 rounded text-gray-100 font-medium">
                         AI Model Tuning
                     </a>
-                    <a href="/design3/admin/report-options" className="block px-3 py-2 hover:bg-gray-700 rounded">
+                    {/* <a href="/design3/admin/report-options" className="block px-3 py-2 hover:bg-gray-700 rounded">
                         Report Options
-                    </a>
+                    </a> */}
                     <a
                         href="/design3/admin/user-management"
                         className="block px-3 py-2 hover:bg-gray-700 rounded"
